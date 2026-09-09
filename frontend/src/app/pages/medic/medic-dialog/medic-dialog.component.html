@@ -1,0 +1,63 @@
+<mat-dialog-content>
+    <mat-toolbar>
+        <span>Medic Info</span>
+    </mat-toolbar>
+
+    <form [formRoot]="medicForm.form" (submit)="operate()" class="example-container">
+
+        <mat-form-field>
+            <mat-label>Specialty</mat-label>
+            <mat-select [formField]="medicForm.form.idSpecialty">
+                @for (sp of $specialties(); track $index) {
+                    <mat-option [value]="sp.idSpecialty">{{sp.nameSpecialty}}</mat-option>
+                }                
+            </mat-select>            
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Primary Name</mat-label>
+            <input matInput placeholder="Primary Name" [formField]="medicForm.form.primaryName" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Surname</mat-label>
+            <input matInput placeholder="Surname" [formField]="medicForm.form.surname" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>CMP</mat-label>
+            <input matInput placeholder="CMP" [formField]="medicForm.form.cmpMedic" />
+        </mat-form-field>
+
+        <div class="photo-container">
+            @if ($preview()) {
+                <img class="photo-preview" [src]="$preview()" alt="Medic photo" />
+            }
+
+            <input type="file" accept="image/*" hidden #photoInput (change)="changeFile($event)" />
+
+            <button mat-flat-button type="button" (click)="photoInput.click()">
+                <span>Photo</span>
+                <mat-icon>photo_camera</mat-icon>
+            </button>
+
+            @if ($file(); as file) {
+                <span class="photo-name">{{ file.name }}</span>
+            }
+        </div>
+
+        <div class="button-container">
+        <button mat-flat-button type="submit" [disabled]="medicForm.isInvalid()">
+            <span>OK</span>
+            <mat-icon>done</mat-icon>
+        </button>
+
+        <button mat-flat-button type="button" class="cancel-button" (click)="close()">
+            <span>Cancel</span>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    </form>
+
+
+</mat-dialog-content>

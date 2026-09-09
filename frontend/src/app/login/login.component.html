@@ -1,0 +1,45 @@
+<div class="login-container">
+    <mat-card class="login-card">
+        @if ($loggingIn()) {
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+
+        <mat-card-header>
+            <mat-card-title>MEDIAPP</mat-card-title>
+            <mat-card-subtitle>Ingrese sus credenciales</mat-card-subtitle>
+        </mat-card-header>
+
+        <form [formRoot]="loginForm.$form" (submit)="login()">
+            <mat-card-content class="login-content">
+                <mat-form-field>
+                    <mat-label>EMAIL</mat-label>
+                    <input matInput placeholder="Email" autocomplete="username" [formField]="loginForm.$form.username"/>
+                    @if (loginForm.$form.username().errors().some(error => error.kind === 'required') && loginForm.$form.username().touched()) {
+                        <small class="invalid">Is required</small>
+                    }
+                    @if (loginForm.$form.username().errors().some(error => error.kind === 'email') && loginForm.$form.username().touched()) {
+                        <small class="invalid">Invalid email</small>
+                    }
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>PASSWORD</mat-label>
+                    <input matInput type="password" placeholder="Password" autocomplete="current-password" [formField]="loginForm.$form.password"/>
+                    @if (loginForm.$form.password().errors().some(error => error.kind === 'required') && loginForm.$form.password().touched()) {
+                        <small class="invalid">Is required</small>
+                    }
+                    @if (loginForm.$form.password().errors().some(error => error.kind === 'minLength') && loginForm.$form.password().touched()) {
+                        <small class="invalid">minLength is 3</small>
+                    }
+                </mat-form-field>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+                <button mat-flat-button type="submit" [disabled]="loginForm.isInvalid() || $loggingIn()">
+                    <span>Sign in</span>
+                    <mat-icon>login</mat-icon>
+                </button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</div>

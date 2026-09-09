@@ -1,0 +1,93 @@
+.medic-selected {
+    box-shadow: 0 0 20px rgba(0,0,0,0.7); 
+    border: 2px solid rgb(34, 0, 255); 
+    transition: box-shadow 0.3s ease, border 0.3s ease; 
+}
+
+.fixedRight {
+    top: auto !important;
+    right: 20px !important;
+    bottom: 10px !important;
+    left: auto !important;
+    position: fixed !important;
+}
+
+
+.fixedLeft {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10px !important;
+    left: 20px !important;
+    position: fixed !important;
+}
+
+.consultCSS{
+    background: rgb(2, 95, 68);
+    color: white;
+}  
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.form-container form {
+    width: 100%;
+}
+
+.form-container mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form-container button {
+    margin-top: 20px;
+}
+
+.form-container mat-list {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.medics-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 100%;
+}
+
+.medics-container mat-card {
+    flex: 1 1 calc(20% - 16px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .medics-container mat-card {
+        flex: 1 1 100%;
+    }
+}
+
+.medics-container mat-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-container .medic-title {
+    color: #1976d2; 
+}
+
+.form-container mat-card img {
+    cursor: pointer;
+}
+
+.form-container .mat-card-actions button {
+    width: 100%;
+}
+
+.form-container button[matStepperNext] {
+    margin-top: 30px;
+}

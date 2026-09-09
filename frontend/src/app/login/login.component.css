@@ -1,0 +1,21 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 360px;
+    padding-bottom: 10px;
+}
+
+.login-content {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.invalid {
+    color: red;
+}

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "dr-jskill": {
+      "source": "jdubois/dr-jskill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "071cbb0586165c63a6cde87bac820cba17118ec07b2d3523a98f34a19f37e111"
+    },
+    "java-code-review": {
+      "source": "decebals/claude-code-java",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/java-code-review/SKILL.md",
+      "computedHash": "94f361bb129275647486cd1e6084ef789d7b429ee65edfd6e846a89f3a7d58a2"
+    },
+    "java-testing": {
+      "source": "pluginagentmarketplace/custom-plugin-java",
+      "sourceType": "github",
+      "skillPath": "skills/java-testing/SKILL.md",
+      "computedHash": "e58bdbcc271dfc689ce8b67c54a6dade5bcfb7c2c68e2615be2b39b8915ac1a0"
+    }
+  }
+}

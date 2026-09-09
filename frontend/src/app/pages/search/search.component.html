@@ -1,0 +1,75 @@
+<form [formRoot]="searchForm.form" (submit)="search()" class="search-container">
+
+    <mat-tab-group #tabGroup>
+
+        <mat-tab label="By Patient">
+            <div class="tab-container">
+                <mat-form-field>
+                    <mat-label>DNI</mat-label>
+                    <input matInput placeholder="Ex. 12345678" [formField]="searchForm.form.dni" />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Fullname</mat-label>
+                    <input matInput placeholder="Ex. Mia" [formField]="searchForm.form.fullname" />
+                </mat-form-field>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="By Dates">
+            <div class="tab-container">
+                <mat-form-field>
+                    <mat-label>Date range</mat-label>
+                    <mat-date-range-input [rangePicker]="rangePicker">
+                        <input matStartDate placeholder="Start date" [formField]="searchForm.form.startDate" />
+                        <input matEndDate placeholder="End date" [formField]="searchForm.form.endDate" />
+                    </mat-date-range-input>
+                    <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #rangePicker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+
+    <button mat-flat-button type="submit">
+        <span>Search</span>
+        <mat-icon>search</mat-icon>
+    </button>
+
+</form>
+
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="patient">
+            <th mat-header-cell *matHeaderCellDef> PATIENT </th>
+            <td mat-cell *matCellDef="let row"> {{row.patient?.firstName}} {{row.patient?.lastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="medic">
+            <th mat-header-cell *matHeaderCellDef> MEDIC </th>
+            <td mat-cell *matCellDef="let row"> {{row.medic?.primaryName}} {{row.medic?.surname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> DATE </th>
+            <td mat-cell *matCellDef="let row"> {{row.consultDate | date: 'dd-MM-yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> ACTIONS </th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-flat-button type="button" (click)="openDialog(row)">
+                    <span>View Details</span>
+                    <mat-icon>visibility</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+</div>

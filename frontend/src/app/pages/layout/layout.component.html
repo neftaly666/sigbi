@@ -1,0 +1,65 @@
+<div class="example-container">
+    <mat-toolbar class="example-toolbar">
+        <button mat-icon-button (click)="sidenav.toggle()">
+            @if (!sidenav.opened) {
+                <mat-icon>menu</mat-icon>
+            }@else {
+                <mat-icon>close</mat-icon>
+            }
+        </button>
+
+        <span>MEDIAPP</span>
+
+        <span class="example-spacer"></span>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>account_box</mat-icon>
+                <span>My account</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+    </mat-toolbar>
+    
+    <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav #sidenav style="width: 250px" mode="side">
+
+            <img src="mitocode.png" width="128" style="margin-left: 20px">
+
+            <mat-divider></mat-divider>
+
+            <!-- icon, name y url salen tal cual de la tabla menu cruzada con los roles del usuario -->
+            @for (item of $menus(); track item.idMenu) {
+                <button class="myButton" [routerLinkActive]="['active']" mat-menu-item (click)="sidenav.toggle()"
+                    [routerLink]="item.url" >
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                    <span>{{ item.name }}</span>
+                </button>
+                <mat-divider></mat-divider>
+            }
+
+            <!-- Estatico: el menu de la API viene de la tabla menu y agregar la fila seria un cambio de backend -->
+            <button class="myButton" [routerLinkActive]="['active']"  mat-menu-item (click)="sidenav.toggle()"
+                routerLink="/pages/drug-rag" >
+                <mat-icon>medication</mat-icon>
+                <span>Medicamentos</span>
+            </button>
+            <mat-divider></mat-divider>
+        </mat-sidenav> 
+
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+
+    <!-- Montado una sola vez aqui: cubre todas las pantallas de /pages y sobrevive a la navegacion -->
+    <app-medibot-agent />
+</div>

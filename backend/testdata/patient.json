@@ -1,0 +1,26 @@
+[
+  {
+    "firstName": "Lucia",
+    "lastName": "Mendoza",
+    "dni": "40000001",
+    "address": "Av. Los Alamos 123, Springfield",
+    "phone": "911000001",
+    "email": "lucia.test@example.com"
+  },
+  {
+    "firstName": "Diego",
+    "lastName": "Salazar",
+    "dni": "40000002",
+    "address": "Jr. Las Flores 456, Springfield",
+    "phone": "911000002",
+    "email": "diego.test@example.com"
+  },
+  {
+    "firstName": "Carmen",
+    "lastName": "Rios",
+    "dni": "40000003",
+    "address": "Calle El Sol 789, Springfield",
+    "phone": "911000003",
+    "email": "carmen.test@example.com"
+  }
+]

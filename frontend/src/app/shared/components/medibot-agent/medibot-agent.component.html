@@ -1,0 +1,87 @@
+@if (!$open()) {
+    <button mat-fab class="medibot-launcher" type="button" aria-label="Abrir MediBot - Agent"
+        matTooltip="MediBot - Agent" (click)="medibotAgentStore.open()">
+        <mat-icon>smart_toy</mat-icon>
+    </button>
+}
+
+@if ($open()) {
+    <section class="medibot-panel" (keydown.escape)="collapse()">
+
+        <header class="medibot-header">
+            <mat-icon>auto_awesome</mat-icon>
+            <span class="medibot-title">MediBot - Agent</span>
+            <span class="medibot-spacer"></span>
+            <button mat-icon-button type="button" aria-label="Minimizar el asistente"
+                matTooltip="Minimizar" (click)="collapse()">
+                <mat-icon>remove</mat-icon>
+            </button>
+            <button mat-icon-button type="button" aria-label="Cerrar el asistente"
+                matTooltip="Cerrar y reiniciar" (click)="dismiss()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </header>
+
+        <div #list class="medibot-body" role="log" aria-live="polite">
+
+            @for (message of $view(); track $index) {
+                @if (message.role === 'user') {
+                    <div class="medibot-row medibot-row-user">
+                        <div class="medibot-bubble medibot-bubble-user">{{ message.text }}</div>
+                        <span class="medibot-time">{{ message.time | date: 'shortTime' }}</span>
+                    </div>
+                } @else {
+                    <div class="medibot-row medibot-row-bot">
+                        <div class="medibot-avatar">
+                            <mat-icon>smart_toy</mat-icon>
+                        </div>
+                        <div class="medibot-bot-content">
+                            <div class="medibot-bubble markdown" [class.medibot-bubble-error]="message.error"
+                                [innerHTML]="message.html"></div>
+                            @if (message.error) {
+                                <button mat-stroked-button type="button" class="medibot-retry"
+                                    [disabled]="!medibotAgentStore.$canRetry()" (click)="retry()">
+                                    <mat-icon>refresh</mat-icon>
+                                    <span>Reintentar</span>
+                                </button>
+                            }
+                            <span class="medibot-time">{{ message.time | date: 'shortTime' }}</span>
+                        </div>
+                    </div>
+                }
+            }
+
+            @if ($showSuggestions()) {
+                <div class="medibot-suggestions">
+                    @for (suggestion of suggestions; track suggestion) {
+                        <button type="button" class="medibot-chip" (click)="suggest(suggestion)">
+                            <mat-icon>auto_awesome</mat-icon>
+                            <span>{{ suggestion }}</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if ($loading()) {
+                <div class="medibot-row medibot-row-bot">
+                    <div class="medibot-avatar">
+                        <mat-icon>smart_toy</mat-icon>
+                    </div>
+                    <div class="medibot-bubble medibot-typing" aria-label="MediBot está escribiendo">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <footer class="medibot-footer">
+            <textarea #input rows="1" class="medibot-input" placeholder="Escribe tu consulta..."
+                aria-label="Escribe tu consulta" [attr.maxlength]="maxLength" [value]="$text()"
+                [disabled]="$loading()" (input)="changeText($event)" (keydown.enter)="enter($event)"></textarea>
+            <button mat-icon-button type="button" class="medibot-send" aria-label="Enviar"
+                [disabled]="$loading() || !$text().trim()" (click)="submit()">
+                <mat-icon>send</mat-icon>
+            </button>
+        </footer>
+    </section>
+}

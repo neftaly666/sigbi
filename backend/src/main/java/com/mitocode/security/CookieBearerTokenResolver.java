@@ -1,0 +1,34 @@
+package com.mitocode.security;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+//Modo por defecto: el token viaja en una cookie HttpOnly que JavaScript no puede leer
+@Component
+@ConditionalOnProperty(name = "app.auth.mode", havingValue = "cookie", matchIfMissing = true)
+public class CookieBearerTokenResolver implements BearerTokenResolver {
+
+    public static final String COOKIE_NAME = "jwt";
+
+    @Override
+    public String resolve(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (COOKIE_NAME.equals(cookie.getName()) && StringUtils.hasText(cookie.getValue())) {
+                return cookie.getValue();
+            }
+        }
+
+        //Sin cookie la peticion sigue como anonima y la cadena decide si el recurso es publico
+        return null;
+    }
+}

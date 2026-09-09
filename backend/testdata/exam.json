@@ -1,0 +1,14 @@
+[
+  {
+    "nameExam": "Blood Test",
+    "descriptionExam": "Complete blood count to evaluate overall health and detect disorders."
+  },
+  {
+    "nameExam": "X-Ray",
+    "descriptionExam": "Radiographic imaging to inspect bones and internal structures."
+  },
+  {
+    "nameExam": "MRI Scan",
+    "descriptionExam": "Magnetic resonance imaging for detailed soft tissue evaluation."
+  }
+]

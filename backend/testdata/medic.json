@@ -1,0 +1,22 @@
+[
+  {
+    "idSpecialty": "__IDSPECIALTY_1__",
+    "primaryName": "Elena",
+    "surname": "Vargas",
+    "cmpMedic": "CMP-100001",
+    "photo": "elena_vargas.png"
+  },
+  {
+    "idSpecialty": "__IDSPECIALTY_1__",
+    "primaryName": "Marco",
+    "surname": "Fuentes",
+    "cmpMedic": "CMP-100002",
+    "photo": "marco_fuentes.png"
+  },
+  {
+    "idSpecialty": "__IDSPECIALTY_1__",
+    "primaryName": "Rosa",
+    "surname": "Delgado",
+    "cmpMedic": "CMP-100003"
+  }
+]

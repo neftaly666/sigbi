@@ -1,0 +1,14 @@
+[
+  {
+    "nameSpecialty": "Cardiology",
+    "descriptionSpecialty": "Diagnosis and treatment of heart and cardiovascular system conditions."
+  },
+  {
+    "nameSpecialty": "Dermatology",
+    "descriptionSpecialty": "Care for skin, hair and nail related conditions and diseases."
+  },
+  {
+    "nameSpecialty": "Pediatrics",
+    "descriptionSpecialty": "Medical care for infants, children and adolescents."
+  }
+]

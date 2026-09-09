@@ -1,0 +1,95 @@
+<div class="drug-rag">
+
+    <mat-toolbar class="drug-rag-toolbar">
+        <mat-icon>medication</mat-icon>
+        <span class="drug-rag-title">Consulta de Medicamentos</span>
+    </mat-toolbar>
+
+    <p class="drug-rag-subtitle">Respuestas basadas en el libro de farmacología cargado en el servidor.</p>
+
+    <div class="drug-rag-search">
+        <mat-form-field class="drug-rag-field">
+            <mat-label>Medicamento</mat-label>
+            <mat-icon matPrefix>medication</mat-icon>
+            <input matInput placeholder="Ej. aspirina" [attr.maxlength]="maxLength" [value]="$text()"
+                [disabled]="$loading()" (input)="changeText($event)" (keydown.enter)="search()" />
+        </mat-form-field>
+
+        <button mat-raised-button type="button" [disabled]="$loading() || !$text().trim()" (click)="search()">
+            <mat-icon>search</mat-icon>
+            <span>Consultar</span>
+        </button>
+
+        @if ($hasResult() || $error()) {
+            <button mat-stroked-button type="button" [disabled]="$loading()" (click)="clear()">
+                <mat-icon>close</mat-icon>
+                <span>Limpiar</span>
+            </button>
+        }
+    </div>
+
+    @if ($isIdle()) {
+        <mat-chip-set class="drug-rag-chips" aria-label="Medicamentos de ejemplo">
+            @for (example of examples; track example) {
+                <mat-chip class="drug-rag-chip" (click)="use(example)" (keydown.enter)="use(example)">
+                    {{ example }}
+                </mat-chip>
+            }
+        </mat-chip-set>
+    }
+
+    @if ($history().length > 0) {
+        <mat-chip-set class="drug-rag-chips" aria-label="Consultas anteriores">
+            @for (term of $history(); track term) {
+                <mat-chip class="drug-rag-chip" (click)="use(term)" (keydown.enter)="use(term)">
+                    <mat-icon matChipAvatar>history</mat-icon>
+                    {{ term }}
+                </mat-chip>
+            }
+        </mat-chip-set>
+    }
+
+    <div class="drug-rag-result" aria-live="polite">
+
+        @if ($loading()) {
+            <mat-card class="drug-rag-panel">
+                <mat-card-content>
+                    <mat-progress-bar mode="indeterminate"
+                        aria-label="Consultando el documento de farmacología"></mat-progress-bar>
+                    <p class="drug-rag-waiting">Analizando el documento de farmacología, esto puede tardar…</p>
+                </mat-card-content>
+            </mat-card>
+        } @else if ($hasResult()) {
+            <mat-card class="drug-rag-panel">
+                <mat-card-header>
+                    <mat-card-title>{{ $term() }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="markdown" [innerHTML]="$html()"></div>
+                    <p class="drug-rag-disclaimer">
+                        Respuesta generada sobre "Farmacología Médica: Teoría y Conceptos".
+                        No sustituye la indicación de un profesional de la salud.
+                    </p>
+                </mat-card-content>
+            </mat-card>
+        } @else if ($error()) {
+            <mat-card class="drug-rag-panel drug-rag-error">
+                <mat-card-content>
+                    <div class="drug-rag-error-row">
+                        <mat-icon>error_outline</mat-icon>
+                        <span>No pudimos obtener la información en este momento.</span>
+                    </div>
+                    <button mat-stroked-button type="button" (click)="retry()">
+                        <mat-icon>refresh</mat-icon>
+                        <span>Reintentar</span>
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        } @else {
+            <div class="drug-rag-empty">
+                <mat-icon>medication</mat-icon>
+                <p>Escribe el nombre de un medicamento para comenzar.</p>
+            </div>
+        }
+    </div>
+</div>

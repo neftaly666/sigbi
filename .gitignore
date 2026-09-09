@@ -1,0 +1,47 @@
+# ---- Secretos y entorno ----
+.env
+.env.*
+*.pem
+*.key
+application-local.yaml
+application-local.properties
+
+# ---- Backend (Maven / Java) ----
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+hs_err_pid*
+replay_pid*
+
+# ---- Frontend (Angular / Node) ----
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+npm-debug.log*
+yarn-error.log*
+
+# ---- IDE ----
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+nbproject/private/
+
+# ---- Sistema operativo ----
+.DS_Store
+Thumbs.db
+
+# ---- Documentación: comprimidos de material del curso ----
+documentacion/*.zip
+
+# ---- Documentación de OTRO proyecto (UNSCH, .NET/SQL Server) ----
+# Excluida a proposito: el enunciado exige repositorio PUBLICO y estos son
+# entregables internos de un cliente. Para incluirlos, borra estas dos lineas.
+documentacion/AN*.docx
+documentacion/EST*.docx
+documentacion/CRONOGRAMA*.xlsx

@@ -1,0 +1,67 @@
+server:
+  port: ${SERVER_PORT:80}
+spring:
+  application:
+    name: mediapp-backend
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          #Spring descarga las claves publicas y valida firma, emisor y expiracion.
+          #Tiene que apuntar al mismo proyecto que app.supabase.url o todo sera 401 tras un login correcto          
+          issuer-uri: ${SUPABASE_ISSUER_URI}
+  jpa:
+    database: postgresql
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  datasource:
+    driver-class-name: org.postgresql.Driver    
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  ai:
+    openai:      
+      api-key: ${OPENAI_API_KEY}
+      model: gpt-4o-mini
+      #chat:
+        #max-tokens: 500
+        #temperature: 0.2
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 1536
+        index-type: HNSW
+        distance-type: cosine_distance
+        #table-name: vector_customs
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+            #crea la tabla spring_ai_chat_memory
+    mcp:
+      client:
+        enabled: false
+        #stdio:
+        #  servers-configuration: classpath:/mcp/mcp-servers.json
+app:
+  auth:
+    #cookie | bearer. Tiene que decir lo mismo que environment.AUTH_MODE del frontend
+    mode: ${AUTH_MODE:bearer}
+    cookie:
+      secure: ${AUTH_COOKIE_SECURE:false}          # true en produccion (HTTPS)
+      same-site: ${AUTH_COOKIE_SAME_SITE:Lax}      # None si el frontend vive en otro dominio (exige secure: true)
+  front:    
+    url: ${FRONT_URL}
+  supabase:    
+    url: ${SUPABASE_URL}    
+    anon-key: ${SUPABASE_ANON_KEY}    
+    service-role-key: ${SUPABASE_SERVICE_ROLE_KEY}
+    bucket: ${SUPABASE_BUCKET:photos}
+    max-photo-size: ${SUPABASE_MAX_PHOTO_SIZE:2097152}
+    
