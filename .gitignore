@@ -37,6 +37,9 @@ nbproject/private/
 __pycache__/
 *.pyc
 
+# ---- Ficheros de bloqueo de LibreOffice, cuando hay un .docx abierto ----
+.~lock.*#
+
 # ---- Sistema operativo ----
 .DS_Store
 Thumbs.db
