@@ -47,18 +47,20 @@
     margin: var(--sigbi-space-3) 0 0;
 }
 
+/* `Label large` de la escala de AN050 seccion 2.5: Medium 14/20. Sale del token y no de
+   un numero escrito a mano, que es como se colo aqui un 12 px que la escala no tiene.
+   Medido con la fuente real: 276 px de texto en los 296 px interiores de la tarjeta a 360
+   px de pantalla, asi que aguanta en una sola linea. A 16 px se partiria en dos. */
 .marca__nombre {
-    font-family: var(--mat-sys-body-medium-font);
-    font-size: 12px;
-    line-height: 16px;
-    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-label-large);
+    color: var(--mat-sys-on-surface);
     margin: var(--sigbi-space-1) 0 0;
 }
 
+/* `Body medium`: mismo cuerpo que el nombre, Regular en vez de Medium y un tono mas
+   suave. La jerarquia la hacen el peso y el color, no un tamano menor fuera de escala. */
 .marca__subtitulo {
-    font-family: var(--mat-sys-body-medium-font);
-    font-size: 13px;
-    line-height: 18px;
+    font: var(--mat-sys-body-medium);
     color: var(--mat-sys-on-surface-variant);
     margin: var(--sigbi-space-4) 0 0;
 }

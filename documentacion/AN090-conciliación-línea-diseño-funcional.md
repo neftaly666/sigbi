@@ -11,7 +11,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 |---|---|
 | Proyecto / Sistema | Sistema de Gestión Bibliotecaria Inteligente (SIGBI) |
 | Código del documento | AN090 |
-| Versión | 1.5 |
+| Versión | 1.6 |
 | Fecha | 2026-09-17 |
 | Autor | Dante Willy Quispe Madueño |
 | Estado | Vigente |
@@ -28,6 +28,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 | 1.3 | 2026-09-14 | D. Quispe | Archivo de Figma regenerado desde el generador corregido. Dos divergencias más: DV-22 (texto en inglés en chips) y DV-23, que solo se vio al mirar el resultado renderizado. Total: 23 registradas, 19 resueltas. |
 | 1.4 | 2026-09-17 | D. Quispe | Se registran las dos primeras divergencias **surgidas al implementar**, no al cotejar el diseño: DV-25 (paleta del gráfico del panel, por contraste) y DV-26 (nombre completo del sistema en la marca del menú). Se restaura además **DV-24**, que la sección 6.3 citaba pero que nunca llegó a la tabla de la sección 4. Total: 26 registradas, 22 resueltas. |
 | 1.5 | 2026-09-17 | D. Quispe | Primer cotejo **desde un teléfono** y contra la aplicación publicada (sección 4.7): DV-35 a DV-38. Tres de las cuatro solo se manifiestan en un navegador móvil -autocorrección del teclado, `100vh` que miente, pie de menú que desaparece con el lateral-, así que ninguna revisión de escritorio podía verlas. **DV-34 queda superada por DV-38**: se resolvió sobre la premisa de que no había sesión, y publicar con `AUTH_ENABLED=true` la invalidó. Total: 38 registradas, 33 resueltas. |
+| 1.6 | 2026-09-17 | D. Quispe | DV-39. Probada la aplicación en el teléfono, el nombre del sistema del `login` se veía pequeño: llevaba un 12 px que la escala no tiene. Comprobarlo destapó que AN050 sección 2.5 publicaba siete pasos mientras 3.3 y 3.5 mandaban otros cuatro sin recoger. Se publica la escala menor y la regla de que el contenido nunca baja de 14. Total: 39 registradas, 34 resueltas. |
 
 ## Aprobación
 
@@ -260,6 +261,8 @@ existen cuando el navegador es el de un móvil**.
 | **DV-37** | El campo de contraseña no tenía forma de revelar lo escrito. En un teclado de móvil, donde no se ve lo que se teclea y el error más probable es un carácter de más, es la diferencia entre corregir y volver a empezar | Media | AN050 sección 3.1 <-> `login.component.html` | **Resuelta a favor del diseño.** Conmutador de solo icono con `aria-pressed`, rótulo que dice la acción y `type="button"` para que no envíe el formulario |
 | **DV-38** | El pie del menú lateral rotulaba "Bibliotecario / Personal de biblioteca" **escrito a mano en la plantilla**, y por debajo de 1024 px ese pie desaparece con el menú: en un teléfono no se veía la cuenta **ni había ningún botón para cerrar sesión**. `LoginService.userInfoUrl` ya existía, y su comentario decía que "lo consume DashboardStore" cuando no lo consumía nadie | Media | AN050 secciones 3.3 y 3.5 <-> `layout.component.html`, `login.service.ts` | **Resuelta a favor del diseño. Supera a DV-34.** El pie muestra la cuenta de `GET /auth/user` sobre el perfil, y en móvil un avatar en la cabecera abre el correo completo y "Cerrar sesión". Con `AUTH_ENABLED=false` no se llama al endpoint: la cadena está en `permitAll` y devolvería `anonymousUser` |
 
+| **DV-39** | El nombre del sistema en el `login` se puso a **12 px**, un tamaño que la escala de AN050 sección 2.5 **no tiene**: su 12/16 es `Label medium` y es **IBM Plex Mono**, reservado a ISBN y códigos. En un teléfono en la mano se veía demasiado pequeño. Al comprobarlo se vio que el hueco era mayor: la sección 2.5 publicaba siete pasos mientras las secciones 3.3 y 3.5 mandaban 21, 13, 11 y 24 px, **que la tabla nunca recogió** | Media | AN050 secciones 2.5 y 3.1 <-> `login.component.css` | **Resuelta a favor del diseño.** El nombre pasa a `Label large` (14/20) y el subtítulo a `Body medium` (14/20), los dos desde los tokens del tema y no desde un número escrito a mano; la jerarquía la hacen peso y color. Medido sobre la aplicación: 282 px de texto en los 296 px interiores de la tarjeta a 360 px de pantalla, una línea; a 16 px se parte en dos. AN050 sección 2.5 publica además la **escala menor** que la aplicación ya usaba y fija la regla de que el contenido nunca baja de 14 |
+
 **Lo que enseña esta pasada.** Las tres divergencias altas y medias de arriba llevaban
 abiertas desde que existe la pantalla y **ninguna revisión de escritorio las habría visto**:
 dos dependen del teclado del móvil y una del navegador que retrae la barra de direcciones.
@@ -350,8 +353,9 @@ Las correcciones del generador se aplicaron el **2026-09-14** sobre
 | DV-36 | **Alta** | AN050 3.5 - alto del shell en `dvh` | Aplicada |
 | DV-37 | Media | AN050 3.1 - conmutador de contraseña | Aplicada |
 | DV-38 | Media | AN050 3.3 + 3.5 - cuenta real y salida en móvil | Aplicada |
+| DV-39 | Media | AN050 2.5 + 3.1 - escala menor publicada | Aplicada |
 
-**26 aplicadas - 1 superada - 1 parcial - 2 abiertas - 2 sin acción.**
+**27 aplicadas - 1 superada - 1 parcial - 2 abiertas - 2 sin acción.**
 
 ### 6.1 Lo que queda por hacer
 

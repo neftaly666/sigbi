@@ -11,7 +11,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 |---|---|
 | Proyecto / Sistema | Sistema de Gestión Bibliotecaria Inteligente (SIGBI) |
 | Código del documento | AN050 |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Fecha | 2026-09-17 |
 | Autor | Dante Willy Quispe Madueño |
 | Estado | Vigente |
@@ -27,6 +27,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 | 1.1 | 2026-09-14 | D. Quispe | Se aplican al generador las correcciones de AN090 (DV-01 a DV-21). Semáforo de estados con sus tres tonos reales, velo del modal al 45 %, `book-dialog` sin el campo inexistente y asistente que enseña su límite de solo lectura. |
 | 1.2 | 2026-09-17 | D. Quispe | Las pantallas ya están construidas: se corrige el estado de implementación, que seguía diciendo "por construir". Se actualiza la marca del menú con el nombre completo del sistema (DV-26 de AN090). |
 | 1.3 | 2026-09-17 | D. Quispe | Cotejo desde un teléfono (DV-35 a DV-38). `login` con bloque de marca a tres líneas centradas y conmutador de visibilidad en la contraseña; campo de correo saneado contra la autocorrección del móvil; el pie del menú muestra la cuenta que ha entrado en vez de un rótulo fijo; avatar de cuenta en la cabecera para poder salir en móvil; el alto del shell pasa a `dvh` para que la barra inferior no se desplace. |
+| 1.4 | 2026-09-17 | D. Quispe | El nombre del sistema en el `login` se veía pequeño en el teléfono: llevaba 12 px, un tamaño que la escala de sección 2.5 no tiene. Pasa a `Label large` (14/20), medido para que siga en una línea a 360 px. Sección 2.5 publica además la **escala menor** -21, 13, 11 y 24- que las secciones 3.3 y 3.5 venían mandando sin que la tabla la recogiera, y fija la regla de que el contenido nunca baja de 14 (DV-39 de AN090). |
 
 ## Aprobación
 
@@ -220,6 +221,25 @@ Escala de texto publicada como estilos `SIGBI/...` en el archivo:
 | `Label large` | IBM Plex Sans Medium | 14 / 20 | Botones, cabecera de tabla, menú |
 | `Label medium` | IBM Plex Mono Regular | 12 / 16 | ISBN, códigos, marcas de tiempo |
 
+**Y una escala menor, para el cromo denso.** Los siete estilos de arriba son los del
+archivo de Figma, y durante un tiempo fueron los únicos publicados aquí mientras las
+secciones 3.3 y 3.5 mandaban tamaños que esta tabla no recogía. Se publican ahora, porque
+existen en la aplicación y están medidos:
+
+| Tamaño | Familia | Dónde | Por qué no es un paso de la escala mayor |
+|---|---|---|---|
+| 21 / 26 | Lora SemiBold | Siglas de la marca del menú lateral | 28 no cabe en los 248 px junto al icono |
+| 13 / 18 | IBM Plex Sans Regular | Subtítulo de la cabecera | Acompaña a un título de 28 sin competir con él |
+| 11 / 14 | IBM Plex Sans Regular | Bajada de la marca, perfil de usuario, rótulos de la barra inferior y del panel | Texto de apoyo en piezas de ancho fijo; nunca contenido que haya que leer seguido |
+| 24 / 30 | Lora SemiBold | Título de página por debajo de 1024 px (sección 3.5) | Variante compacta de `Headline medium` |
+
+**La regla que ordena las dos tablas:** todo lo que el usuario **lee** -nombres, mensajes,
+celdas, campos- sale de la escala mayor, y su mínimo es **14**. La escala menor es solo
+para **rótulos de apoyo en cromo de ancho fijo**, donde el ancho manda y el texto se
+reconoce más que se lee. Un tamaño menor de 14 en contenido es un fallo, no una decisión:
+así se coló un 12 px en el nombre del sistema del `login`, que a un teléfono en la mano le
+resultaba demasiado pequeño (DV-39 de AN090).
+
 **Fuentes verificadas.** Las tres cargaron en Figma sin caer al sustituto Inter. El
 generador tiene un mecanismo de reserva a Inter y avisa de la familia que faltó, para que
 un render con la tipografía equivocada no pase por bueno.
@@ -263,8 +283,18 @@ De arriba abajo:
 
 | Bloque | Especificación |
 |---|---|
-| **Marca**, centrada | Icono `menu_book` de 40 px en `Primary`; debajo las siglas **SIGBI** en Lora SemiBold 28/36; debajo **Sistema de Gestión Bibliotecaria Inteligente** en 12/16, `On Surface Variant` |
-| Subtítulo | "Ingrese sus credenciales", centrado, `On Surface Variant` |
+| **Marca**, centrada | Icono `menu_book` de 40 px en `Primary`; debajo las siglas **SIGBI** en `Headline medium` (Lora SemiBold 28/36), `On Surface`; debajo **Sistema de Gestión Bibliotecaria Inteligente** en `Label large` (IBM Plex Sans Medium 14/20), `On Surface` |
+| Subtítulo | "Ingrese sus credenciales", centrado, en `Body medium` (Regular 14/20), `On Surface Variant` |
+
+**Los tres bloques salen de la escala de sección 2.5, y ninguno lleva un tamaño escrito a
+mano.** El nombre del sistema y el subtítulo comparten cuerpo -14/20-: la jerarquía entre
+ellos la hacen el **peso** (Medium frente a Regular) y el **color** (`On Surface` frente a
+`On Surface Variant`), no un tamaño menor inventado para la ocasión.
+
+**Por qué 14 y no 16.** Medido con IBM Plex Sans sobre la aplicación en ejecución: en un
+teléfono de 360 px la tarjeta deja **296 px** interiores, y el nombre ocupa **282 px a 14 px**
+-una línea, con holgura- frente a **315 px a 16 px**, que se parte en dos. El siguiente paso
+de la escala no cabe.
 | Correo | Campo relleno. `type="email"` con `inputmode="email"`, `autocapitalize="none"`, `autocorrect="off"` y `spellcheck="false"` |
 | Contraseña | Campo relleno con **conmutador de visibilidad** al final (`visibility` / `visibility_off`) |
 | Acción | Botón "Entrar" alineado a la derecha |
