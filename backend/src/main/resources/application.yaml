@@ -1,8 +1,13 @@
 server:
-  port: ${SERVER_PORT:80}
+  #Render, Railway y Fly inyectan PORT; en local manda SERVER_PORT y si no, el 8080
+  port: ${PORT:${SERVER_PORT:8080}}
 spring:
   application:
-    name: mediapp-backend
+    name: sigbi-backend
+  messages:
+    #Los messages*.properties llevan tildes y eñes. Spring Boot ya usa UTF-8 por defecto,
+    #pero se declara para que no dependa de la plataforma donde se arranque.
+    encoding: UTF-8
   security:
     oauth2:
       resourceserver:
@@ -25,32 +30,17 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   ai:
-    openai:      
+    #Lo único que SIGBI usa de Spring AI: el modelo de chat del asistente (RF-14).
+    #La memoria de la conversación es del proceso, no de una tabla, así que no hay
+    #repositorio JDBC que configurar. Si RF-19 (RAG) llegara a entrar, aquí volverian
+    #el almacen de vectores pgvector y su dependencia.
+    openai:
       api-key: ${OPENAI_API_KEY}
       model: gpt-4o-mini
-      #chat:
-        #max-tokens: 500
-        #temperature: 0.2
-    vectorstore:
-      pgvector:
-        initialize-schema: true
-        dimensions: 1536
-        index-type: HNSW
-        distance-type: cosine_distance
-        #table-name: vector_customs
-    chat:
-      memory:
-        repository:
-          jdbc:
-            initialize-schema: always
-            #crea la tabla spring_ai_chat_memory
-    mcp:
-      client:
-        enabled: false
-        #stdio:
-        #  servers-configuration: classpath:/mcp/mcp-servers.json
 app:
   auth:
+    #PA-02: la seguridad es opcional según el enunciado. false abre /v1/** sin token.
+    enabled: ${AUTH_ENABLED:true}
     #cookie | bearer. Tiene que decir lo mismo que environment.AUTH_MODE del frontend
     mode: ${AUTH_MODE:bearer}
     cookie:

@@ -1,5 +1,5 @@
 {
-  "name": "mediapp-frontend",
+  "name": "sigbi-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -19,10 +19,7 @@
     "@angular/material": "^22.0.6",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "chart.js": "^4.5.1",
-    "date-fns": "^4.4.0",
     "marked": "^18.0.11",
-    "ng2-pdf-viewer": "^10.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

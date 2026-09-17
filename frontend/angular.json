@@ -2,11 +2,12 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
-    "mediapp-frontend": {
+    "sigbi-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": { "type": "component" },
@@ -71,10 +72,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "mediapp-frontend:build:production"
+              "buildTarget": "sigbi-frontend:build:production"
             },
             "development": {
-              "buildTarget": "mediapp-frontend:build:development"
+              "buildTarget": "sigbi-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

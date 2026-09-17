@@ -1,6 +1,7 @@
 # ---- Secretos y entorno ----
 .env
 .env.*
+!.env.example
 *.pem
 *.key
 application-local.yaml
@@ -32,16 +33,19 @@ yarn-error.log*
 .classpath
 nbproject/private/
 
+# ---- Restos de herramientas ----
+__pycache__/
+*.pyc
+
 # ---- Sistema operativo ----
 .DS_Store
 Thumbs.db
 
-# ---- Documentación: comprimidos de material del curso ----
+# ---- Documentación ----
+# Los comprimidos son material de apoyo del curso, no entregables del proyecto.
 documentacion/*.zip
+documentacion/*.xlsx
 
-# ---- Documentación de OTRO proyecto (UNSCH, .NET/SQL Server) ----
-# Excluida a proposito: el enunciado exige repositorio PUBLICO y estos son
-# entregables internos de un cliente. Para incluirlos, borra estas dos lineas.
-documentacion/AN*.docx
-documentacion/EST*.docx
-documentacion/CRONOGRAMA*.xlsx
+# Los AN*.docx y los EST*.docx SI entran: son los documentos de SIGBI generados desde sus
+# .md con documentacion/herramientas/generar-docx.sh. La fuente sigue siendo el .md; el
+# .docx es la copia entregable en Word.

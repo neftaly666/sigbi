@@ -1,0 +1,25 @@
+import { computed, inject, Service, signal } from "@angular/core";
+import { httpResource } from "@angular/common/http";
+import { Book } from "../model/book";
+import { BookService } from "../services/book.service";
+
+//Alta y edición comparten diálogo: con id se pide el registro, sin id la url queda
+//undefined y httpResource no lanza petición alguna.
+@Service({ autoProvided: false })
+export class BookDialogStore{
+
+    private readonly bookService = inject(BookService);
+    readonly $id = signal<number | null>(null);
+
+    private readonly $request = computed(() => {
+        const id = this.$id();
+
+        return id ? `${this.bookService.resourceUrl}/${id}` : undefined;
+    });
+
+    readonly bookResource = httpResource<Book>(() => this.$request());
+
+    setId(id: number | null){
+        this.$id.set(id);
+    }
+}

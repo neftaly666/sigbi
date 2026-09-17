@@ -1,65 +1,71 @@
-<div class="example-container">
-    <mat-toolbar class="example-toolbar">
-        <button mat-icon-button (click)="sidenav.toggle()">
-            @if (!sidenav.opened) {
-                <mat-icon>menu</mat-icon>
-            }@else {
-                <mat-icon>close</mat-icon>
-            }
-        </button>
+<div class="shell">
 
-        <span>MEDIAPP</span>
+  <!-- Menú lateral: 248 px, solo a partir de 1024 px de ancho (AN050 sección 3.3) -->
+  <nav class="sidenav" aria-label="Navegación principal">
 
-        <span class="example-spacer"></span>
+    <div class="marca">
+      <mat-icon class="marca__icono">menu_book</mat-icon>
+      <div>
+        <p class="marca__nombre">SIGBI</p>
+        <p class="marca__bajada">Sistema de Gestión Bibliotecaria Inteligente</p>
+      </div>
+    </div>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
+    <mat-divider />
 
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-                <mat-icon>account_box</mat-icon>
-                <span>My account</span>
-            </button>
-            <button mat-menu-item (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-                <span>Logout</span>
-            </button>
-        </mat-menu>
-    </mat-toolbar>
-    
-    <mat-sidenav-container class="example-sidenav-container">
-        <mat-sidenav #sidenav style="width: 250px" mode="side">
+    <ul class="destinos">
+      @for (destino of destinos; track destino.ruta) {
+        <li>
+          <!-- El estado activo se distingue por fondo Y por peso tipografico, no solo
+               por color (PX-03) -->
+          <a
+            class="destino"
+            [class.destino--activo]="$activo() === destino.ruta"
+            [routerLink]="destino.ruta"
+            [attr.aria-current]="$activo() === destino.ruta ? 'page' : null"
+          >
+            <mat-icon class="destino__icono">{{ destino.icono }}</mat-icon>
+            <span>{{ destino.etiqueta }}</span>
+          </a>
+        </li>
+      }
+    </ul>
 
-            <img src="mitocode.png" width="128" style="margin-left: 20px">
+    <span class="sigbi-spacer"></span>
 
-            <mat-divider></mat-divider>
+    <mat-divider />
 
-            <!-- icon, name y url salen tal cual de la tabla menu cruzada con los roles del usuario -->
-            @for (item of $menus(); track item.idMenu) {
-                <button class="myButton" [routerLinkActive]="['active']" mat-menu-item (click)="sidenav.toggle()"
-                    [routerLink]="item.url" >
-                    <mat-icon>{{ item.icon }}</mat-icon>
-                    <span>{{ item.name }}</span>
-                </button>
-                <mat-divider></mat-divider>
-            }
+    <div class="usuario">
+      <div class="usuario__avatar" aria-hidden="true">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div class="usuario__datos">
+        <p class="usuario__nombre">Bibliotecario</p>
+        <p class="usuario__perfil">Personal de biblioteca</p>
+      </div>
+      <button mat-icon-button aria-label="Cerrar sesión" matTooltip="Cerrar sesión" (click)="salir()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </nav>
 
-            <!-- Estatico: el menu de la API viene de la tabla menu y agregar la fila seria un cambio de backend -->
-            <button class="myButton" [routerLinkActive]="['active']"  mat-menu-item (click)="sidenav.toggle()"
-                routerLink="/pages/drug-rag" >
-                <mat-icon>medication</mat-icon>
-                <span>Medicamentos</span>
-            </button>
-            <mat-divider></mat-divider>
-        </mat-sidenav> 
+  <main class="contenido">
+    <router-outlet />
+  </main>
 
-        <mat-sidenav-content>
-            <router-outlet></router-outlet>
-        </mat-sidenav-content>
-
-    </mat-sidenav-container>
-
-    <!-- Montado una sola vez aqui: cubre todas las pantallas de /pages y sobrevive a la navegacion -->
-    <app-medibot-agent />
+  <!-- Por debajo de 1024 px el menú lateral se sustituye por esta barra inferior de
+       cinco destinos; Categorias se llega desde la pantalla de Libros -->
+  <nav class="barra-inferior" aria-label="Navegación principal">
+    @for (destino of destinosMoviles; track destino.ruta) {
+      <a
+        class="barra-inferior__destino"
+        [class.barra-inferior__destino--activo]="$activo() === destino.ruta"
+        [routerLink]="destino.ruta"
+        [attr.aria-current]="$activo() === destino.ruta ? 'page' : null"
+      >
+        <mat-icon>{{ destino.icono }}</mat-icon>
+        <span>{{ destino.etiqueta }}</span>
+      </a>
+    }
+  </nav>
 </div>

@@ -19,7 +19,7 @@ export class LoginStore {
 
         this.loginService.login(username, password).pipe(
             //serverErrorInterceptor devuelve EMPTY: el suscriptor recibe complete y nunca error.
-            //Apagarlo en el callback error dejaria el boton bloqueado tras el primer fallo
+            //Apagarlo en el callback error dejaría el botón bloqueado tras el primer fallo
             finalize(() => this._loggingIn.set(false)),
         ).subscribe(() => {
             //Solo se navega si llego una respuesta: un 401 levanta el snackbar y la pantalla se queda

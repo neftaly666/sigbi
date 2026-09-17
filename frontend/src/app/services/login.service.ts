@@ -5,10 +5,10 @@ import { environment } from '../../environments/environment.development';
 import { BearerLoginResponse } from '../model/bearer-login-response';
 import { ILoginRequest } from '../model/login-request';
 
-//sessionStorage y no localStorage: el token muere con la pestana
+//sessionStorage y no localStorage: el token muere con la pestaña
 export const TOKEN_NAME = 'access_token';
 
-//No extiende GenericService: detras de /login no hay un recurso CRUD
+//No extiende GenericService: detrás de /login no hay un recurso CRUD
 @Service()
 export class LoginService {
 
@@ -20,7 +20,7 @@ export class LoginService {
     //Publico porque DashboardStore lo consume con httpResource, que necesita la url y no un Observable
     readonly userInfoUrl = `${environment.HOST}/auth/user`;
 
-    //La unica clase que conoce las dos formas de autenticarse
+    //La única clase que conoce las dos formas de autenticarse
     login(username: string, password: string): Observable<boolean> {
         const body: ILoginRequest = { username, password };
 
@@ -35,7 +35,7 @@ export class LoginService {
         return this.http.post<boolean>(this.loginUrl, body);
     }
 
-    //Limpia sessionStorage siempre, tambien en modo cookie: no cuesta nada y evita tokens viejos
+    //Limpia sessionStorage siempre, también en modo cookie: no cuesta nada y evita tokens viejos
     logout(){
         return this.http.get<void>(this.logoutUrl).pipe(
             tap(() => sessionStorage.removeItem(TOKEN_NAME)),

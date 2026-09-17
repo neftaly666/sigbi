@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { contextoDeFormulario } from '../shared/http/form-error.context';
 
 @Service({autoProvided: false})
 export abstract class GenericService<T> {
@@ -24,6 +25,18 @@ export abstract class GenericService<T> {
 
     update(id: number, t: T){
         return this.http.put(`${this.url}/${id}`, t);
+    }
+
+    //Variantes para los dialogos: marcan la petición para que el interceptor devuelva el
+    //400 en vez de convertirlo en un aviso genérico, y así el error se pinta bajo su campo
+    //(PX-04, ver form-error.context.ts). Métodos aparte y no un parámetro opcional de
+    //save/update: en la llamada se lee que ese formulario quiere el error de vuelta.
+    saveWithFormErrors(t: T){
+        return this.http.post(this.url, t, { context: contextoDeFormulario() });
+    }
+
+    updateWithFormErrors(id: number, t: T){
+        return this.http.put(`${this.url}/${id}`, t, { context: contextoDeFormulario() });
     }
 
     delete(id: number){

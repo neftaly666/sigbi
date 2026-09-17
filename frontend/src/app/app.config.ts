@@ -4,6 +4,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { paginadorEnEspanol } from './shared/services/paginator-intl';
 import { bearerTokenInterceptor } from './interceptor/bearer-token.interceptor';
 import { credentialsInterceptor } from './interceptor/credentials.interceptor';
 import { serverErrorInterceptor } from './interceptor/server-error.interceptor';
@@ -14,10 +17,14 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      //El orden importa: serverErrorInterceptor va ultimo para envolver a los dos que modifican la peticion
+      //El orden importa: serverErrorInterceptor va último para envolver a los dos que modifican la petición
       withInterceptors([credentialsInterceptor, bearerTokenInterceptor, serverErrorInterceptor])
     ),
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    //index.html carga Material Symbols, no el juego clasico Material Icons: sin esto
+    //mat-icon pediria la clase 'material-icons', que ya no existe, y no se vería ningún icono
+    { provide: MAT_ICON_DEFAULT_OPTIONS, useValue: { fontSet: 'material-symbols-outlined' } },
+    { provide: MatPaginatorIntl, useFactory: paginadorEnEspanol },
   ]
 };

@@ -1,0 +1,37 @@
+/* Area de contenido de AN050 sección 3.4: relleno de 32 y separacion de 20 entre bloques */
+.cuerpo {
+  padding: 0 var(--sigbi-space-6) var(--sigbi-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* La tabla no se encoge por debajo de su ancho útil: se desplaza dentro del panel */
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+/* El título es el dato por el que se busca un libro: se lleva el ancho sobrante en vez de
+   partirse en tres lineas mientras el ISBN, que es fijo, se queda holgado */
+.sigbi-table .col-titulo {
+  min-width: 22ch;
+}
+
+.sigbi-table .col-isbn,
+.sigbi-table .col-disponibilidad {
+  white-space: nowrap;
+  width: 1%;
+}
+
+@media (max-width: 1023px) {
+  .cuerpo {
+    padding: 0 var(--sigbi-space-4) var(--sigbi-space-4);
+  }
+}
+
+/* El acceso a Categorías solo hace falta donde la barra inferior no lo lleva */
+@media (min-width: 1024px) {
+  .enlace-categorias {
+    display: none;
+  }
+}

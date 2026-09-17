@@ -7,7 +7,7 @@ const emptyLogin = (): ILoginRequest => ({
     password: '',
 });
 
-//autoProvided: false y provisto por el componente, asi cada visita a la pantalla arranca en blanco
+//autoProvided: false y provisto por el componente, así cada visita a la pantalla arranca en blanco
 @Service({autoProvided: false})
 export class LoginForm {
 

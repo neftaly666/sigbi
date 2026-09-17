@@ -16,6 +16,9 @@
     padding-top: 20px;
 }
 
+/* El mensaje de error usa el rol Error del tema, no un rojo propio (TW-09). Con el token
+   son 6,12:1 sobre la tarjeta y 10,15:1 en oscuro; el `red` que habia aqui se quedaba en
+   3,74:1 y no llegaba a AA. */
 .invalid {
-    color: red;
+    color: var(--mat-sys-error);
 }
