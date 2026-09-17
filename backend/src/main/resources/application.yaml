@@ -2,6 +2,13 @@ server:
   #Render, Railway y Fly inyectan PORT; en local manda SERVER_PORT y si no, el 8080
   port: ${PORT:${SERVER_PORT:8080}}
 spring:
+  #El .env se lee como un fichero de propiedades: su formato (CLAVE=valor, comentarios con
+  #almohadilla) ya es el de un .properties. `optional:` evita que falte el fichero rompa el
+  #arranque, que es justo lo que pasa en Render, donde la configuración llega por variables
+  #de entorno reales; y esas, cuando existen, mandan sobre el fichero.
+  config:
+    import: optional:file:.env[.properties]
+
   application:
     name: sigbi-backend
   messages:
