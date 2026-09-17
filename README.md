@@ -19,13 +19,22 @@ Trabajo final del curso **Java AI Full Stack - MitoCode**.
 
 | | |
 |---|---|
-| **Aplicación** | `https://<pendiente>.vercel.app` |
-| **API** | `https://<pendiente>.onrender.com` |
-| **Acceso** | correo y contraseña de prueba, pendientes de crear en Supabase |
+| **Aplicación** | <https://sigbi-beige.vercel.app> |
+| **API** | <https://sigbi-backend.onrender.com> |
+| **Usuario** | `recycled-buddhist99@bravealias.com` |
+| **Contraseña** | `MitoCode.2026` |
+
+Esa cuenta existe solo para que se pueda recorrer la aplicación publicada. No da acceso a
+ningún otro servicio y el correo es un alias desechable.
 
 **La primera carga puede tardar cerca de un minuto.** El backend está en el plan gratuito de
 Render, que duerme el servicio tras 15 minutos sin tráfico; la primera llamada lo despierta.
 A partir de ahí responde con normalidad.
+
+Sobre ese mismo arranque en frío: la **primera petición autenticada** puede responder 401
+aunque las credenciales sean correctas. El backend valida la firma del token contra el JWKS
+de Supabase y necesita descargarlo la primera vez; hasta que lo tiene en memoria, rechaza.
+Si el acceso falla nada más despertar el servicio, repítelo.
 
 El paso a paso del despliegue -las tres piezas, el orden y las variables de entorno- está en
 [`documentacion/AN110-manual-de-instalación.md`](documentacion/AN110-manual-de-instalación.md),
