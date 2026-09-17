@@ -35,7 +35,9 @@ spring:
     #repositorio JDBC que configurar. Si RF-19 (RAG) llegara a entrar, aquí volverian
     #el almacen de vectores pgvector y su dependencia.
     openai:
-      api-key: ${OPENAI_API_KEY}
+      #Sin clave el arranque no se cae: AgentController responde que el asistente no está
+      #configurado (AN080 R-08). Sin el valor por defecto, ese camino no se alcanza nunca.
+      api-key: ${OPENAI_API_KEY:}
       model: gpt-4o-mini
 app:
   auth:
