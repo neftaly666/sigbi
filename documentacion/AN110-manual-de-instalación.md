@@ -414,14 +414,23 @@ Cada pieza necesita la URL de la otra, así que hay una vuelta:
 
 ### 10.2 Backend en Render
 
-Servicio de tipo **Web Service**, conectado al repositorio de GitHub:
+La forma corta es **New -> Blueprint** apuntando al repositorio: Render lee `render.yaml`
+de la raíz y crea el servicio con todos los ajustes puestos. Solo hay que escribir los
+valores de las variables marcadas como secretas.
+
+Si se prefiere el formulario, es un **Web Service** con estos ajustes:
 
 | Ajuste | Valor |
 |---|---|
 | Runtime | **Docker** |
 | Dockerfile Path | `backend/Dockerfile` |
 | Docker Build Context Directory | `backend` |
-| Health Check Path | `/v1/books` |
+| Health Check Path | **vacío** |
+
+**El health check se deja vacío a propósito.** Con `AUTH_ENABLED=true`, todo lo que no sea
+`/login/**` exige token: cualquier ruta que se ponga ahí responde 401 y Render da el
+despliegue por caído aunque la aplicación esté perfectamente viva. Sin ruta, Render
+comprueba que el proceso abra el puerto, que es lo que de verdad indica que arrancó.
 
 El `Dockerfile` compila con JDK 25 y ejecuta con JRE 25. Se usa Docker y no la detección
 automática porque Java 25 y Spring Boot 4.1 son recientes y los *buildpacks* de la
@@ -453,6 +462,12 @@ Antes de desplegar hay que poner la URL del backend en
 de entorno: Angular resuelve ese fichero al compilar.
 
 ### 10.4 El acceso, con seguridad activada
+
+> **Antes de empezar:** con `AUTH_ENABLED=true` hacen falta `SUPABASE_ANON_KEY` y
+> `SUPABASE_SERVICE_ROLE_KEY`, que en el entorno local están vacías porque ahí se trabaja
+> con la seguridad desactivada. Se copian del panel de Supabase, en
+> *Project Settings -> API*. Sin la primera, el acceso devuelve error aunque el usuario y
+> la contraseña sean correctos.
 
 La demostración publicada **pide credenciales**, así que hace falta un usuario de prueba:
 

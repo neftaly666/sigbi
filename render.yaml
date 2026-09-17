@@ -1,0 +1,55 @@
+# Plano de despliegue de Render (Blueprint). Se crea el servicio desde
+# New -> Blueprint apuntando a este repositorio, en vez de rellenar el formulario a mano.
+#
+# Los secretos NO viven aquí: van marcados con `sync: false` y se escriben una sola vez en
+# el panel de Render. Este fichero es público, como el resto del repositorio.
+services:
+  - type: web
+    name: sigbi-backend
+    runtime: docker
+    plan: free
+    region: oregon
+
+    # El monorepo: Render solo mira la carpeta del backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    buildFilter:
+      paths:
+        - backend/**
+
+    # Sin healthCheckPath a propósito: con la seguridad activada, todo salvo /login/**
+    # exige token, así que cualquier ruta devolvería 401 y Render daría el despliegue por
+    # caído. Sin él, Render comprueba que el proceso abre el puerto, que es lo que importa.
+
+    envVars:
+      # --- Base de datos: Supabase con Session Pooler ---
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+      # --- CORS: la URL de Vercel, sin barra final ---
+      - key: FRONT_URL
+        sync: false
+
+      # --- Supabase Auth: las cuatro hacen falta con AUTH_ENABLED=true ---
+      - key: SUPABASE_ISSUER_URI
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
+      # --- Asistente: si se deja vacía, responde que no está disponible ---
+      - key: OPENAI_API_KEY
+        sync: false
+
+      # --- Estos sí son públicos y tienen que decir lo mismo que el frontend ---
+      - key: AUTH_ENABLED
+        value: "true"
+      - key: AUTH_MODE
+        value: bearer
