@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { LoginService } from '../../services/login.service';
+import { SessionStore } from '../../store/session.store';
 
 interface Destino {
   etiqueta: string;
@@ -39,8 +39,11 @@ interface Destino {
 })
 export class LayoutComponent {
 
-  private readonly loginService = inject(LoginService);
+  private readonly sessionStore = inject(SessionStore);
   private readonly router = inject(Router);
+
+  protected readonly $cuenta = this.sessionStore.$cuenta;
+  protected readonly $correo = this.sessionStore.$correo;
 
   protected readonly destinos: Destino[] = [
     { etiqueta: 'Panel', icono: 'dashboard', ruta: '/pages/dashboard', enMovil: true },
@@ -72,10 +75,9 @@ export class LayoutComponent {
     return this.destinos.find((d) => url.startsWith(d.ruta))?.ruta ?? '';
   });
 
-  //La navegación no espera la respuesta: la sesión ya se está invalidando en el servidor
+  //Cerrar sesión vive en el store: lo hacen dos sitios -este pie y el avatar de la
+  //cabecera, que es la unica salida en un telefono- y no puede divergir entre los dos
   salir() {
-    this.loginService.logout().subscribe();
-
-    this.router.navigate(['/login']);
+    this.sessionStore.salir();
   }
 }

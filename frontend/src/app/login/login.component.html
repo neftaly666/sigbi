@@ -4,16 +4,29 @@
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         }
 
-        <mat-card-header>
-            <mat-card-title>SIGBI Sistema de Gestión Bibliotecaria Inteligente</mat-card-title>
-            <mat-card-subtitle>Ingrese sus credenciales</mat-card-subtitle>
-        </mat-card-header>
+        <!-- Misma jerarquia que la marca del menu lateral -icono, siglas, nombre completo-
+             pero apilada y centrada: el login no tiene ancho que repartir y es la primera
+             pantalla del sistema que alguien ve (AN050 seccion 3.1) -->
+        <div class="marca">
+            <mat-icon class="marca__icono">menu_book</mat-icon>
+            <p class="marca__siglas">SIGBI</p>
+            <p class="marca__nombre">Sistema de Gestión Bibliotecaria Inteligente</p>
+            <p class="marca__subtitulo">Ingrese sus credenciales</p>
+        </div>
 
         <form [formRoot]="loginForm.$form" (submit)="login()">
             <mat-card-content class="login-content">
                 <mat-form-field>
                     <mat-label>Correo electrónico</mat-label>
-                    <input matInput autocomplete="username" [formField]="loginForm.$form.username"/>
+                    <!-- type/inputmode dan el teclado de correo -con @ y punto- y, en Android y iOS,
+                         apagan de paso la autocorrección. Los tres atributos siguientes la apagan
+                         de forma explícita: en un campo de texto normal Gboard "corrige" palabras que
+                         no están en el diccionario, y manda otra dirección distinta que sigue teniendo
+                         formato válido, así que el formulario la da por buena y el backend responde
+                         401. En el escritorio no pasa porque no hay autocorrección. -->
+                    <input matInput type="email" inputmode="email" autocapitalize="none"
+                           autocorrect="off" spellcheck="false" autocomplete="username"
+                           [formField]="loginForm.$form.username"/>
                     @if (loginForm.$form.username().errors().some(error => error.kind === 'required') && loginForm.$form.username().touched()) {
                         <small class="invalid">El correo es obligatorio</small>
                     }
@@ -24,7 +37,21 @@
 
                 <mat-form-field>
                     <mat-label>Contraseña</mat-label>
-                    <input matInput type="password" autocomplete="current-password" [formField]="loginForm.$form.password"/>
+                    <input matInput [type]="$verContrasena() ? 'text' : 'password'"
+                           autocomplete="current-password" [formField]="loginForm.$form.password"/>
+                    <!-- type="button" es obligatorio: dentro de un <form>, un boton sin type
+                         actua como envio y mandaria el formulario al pulsar el ojito.
+                         El rotulo dice la accion, no el estado, y aria-pressed da el estado. -->
+                    <button
+                        mat-icon-button
+                        matSuffix
+                        type="button"
+                        (click)="alternarContrasena()"
+                        [attr.aria-label]="$verContrasena() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                        [attr.aria-pressed]="$verContrasena()"
+                    >
+                        <mat-icon>{{ $verContrasena() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
                     @if (loginForm.$form.password().errors().some(error => error.kind === 'required') && loginForm.$form.password().touched()) {
                         <small class="invalid">La contraseña es obligatoria</small>
                     }

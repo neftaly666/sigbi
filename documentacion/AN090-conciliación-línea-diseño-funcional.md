@@ -11,11 +11,11 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 |---|---|
 | Proyecto / Sistema | Sistema de Gestión Bibliotecaria Inteligente (SIGBI) |
 | Código del documento | AN090 |
-| Versión | 1.3 |
-| Fecha | 2026-09-14 |
+| Versión | 1.5 |
+| Fecha | 2026-09-17 |
 | Autor | Dante Willy Quispe Madueño |
 | Estado | Vigente |
-| Artefactos cotejados | Diseño de Figma (`diseño/figma-plugin/code.js`) - AN010 - AN030 - AN050 - AN070 |
+| Artefactos cotejados | Diseño de Figma (`diseño/figma-plugin/code.js`) - AN010 - AN030 - AN050 - AN070 - la aplicación publicada, en escritorio y en teléfono |
 | Fecha máxima de entrega | 2026-09-30 |
 
 ## Control de versiones
@@ -27,6 +27,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 | 1.2 | 2026-09-14 | D. Quispe | Correcciones aplicadas al generador. El segundo pase destapó cinco divergencias más (DV-17 a DV-21), una de ellas grave: el asistente aparecía registrando una reserva. Total: 21 registradas, 17 resueltas. |
 | 1.3 | 2026-09-14 | D. Quispe | Archivo de Figma regenerado desde el generador corregido. Dos divergencias más: DV-22 (texto en inglés en chips) y DV-23, que solo se vio al mirar el resultado renderizado. Total: 23 registradas, 19 resueltas. |
 | 1.4 | 2026-09-17 | D. Quispe | Se registran las dos primeras divergencias **surgidas al implementar**, no al cotejar el diseño: DV-25 (paleta del gráfico del panel, por contraste) y DV-26 (nombre completo del sistema en la marca del menú). Se restaura además **DV-24**, que la sección 6.3 citaba pero que nunca llegó a la tabla de la sección 4. Total: 26 registradas, 22 resueltas. |
+| 1.5 | 2026-09-17 | D. Quispe | Primer cotejo **desde un teléfono** y contra la aplicación publicada (sección 4.7): DV-35 a DV-38. Tres de las cuatro solo se manifiestan en un navegador móvil -autocorrección del teclado, `100vh` que miente, pie de menú que desaparece con el lateral-, así que ninguna revisión de escritorio podía verlas. **DV-34 queda superada por DV-38**: se resolvió sobre la premisa de que no había sesión, y publicar con `AUTH_ENABLED=true` la invalidó. Total: 38 registradas, 33 resueltas. |
 
 ## Aprobación
 
@@ -243,7 +244,28 @@ evalúe. El archivo de Figma y AN050 se rehicieron contra él.
 | **DV-31** | La columna de estado de Libros se rotulaba **Estado**; en la aplicación es **Disponibilidad**. Clientes tiene **tres** acciones por fila, no dos, y Reservas **una** | Baja | AN050 sección 7.1 <-> plantillas de las cuatro pantallas de gestión | **Resuelta a favor del código.** Reservas solo permite eliminar porque RN-13 no deja editar una reserva registrada |
 | **DV-32** | El asistente se dibujó como una **conversación en marcha**; lo que ve quien entra es el **estado inicial** con cuatro preguntas de ejemplo | Media | AN050 sección 7.1 <-> `assistant.component.html` | **Resuelta a favor del código.** La cuarta sugerencia -"Registra una reserva para María"- es de escritura a propósito: al pulsarla el agente se niega, y eso es lo que comprueba AN120 paso 5.1.3 |
 | **DV-33** | El rol **`Error`** valía `#DC2626` en el generador y `#B3261E` en `material-theme.scss`. **AN050 nunca lo fijó**: no era un fallo de ninguna de las dos partes, era un hueco de la guía | Media | `code.js` <-> `material-theme.scss` <-> AN050 sección 2.3 | **Resuelta a favor del código y documentada.** `#B3261E` da 6,12:1 sobre `Surface Container Low`, donde se apoya el texto de error de 12 px; `#DC2626` se quedaba en 4,52:1, AA sin margen. AN050 sección 2.3 publica ahora los cuatro tokens del rol |
-| **DV-34** | El pie del menú lateral mostraba un nombre propio ("Dante W. / Bibliotecario"); la aplicación rotula el **perfil** ("Bibliotecario / Personal de biblioteca") con un icono genérico | Baja | AN050 sección 3.3 <-> `layout.component.html` | **Resuelta a favor del código**: sin sesión implementada (PA-02) no hay nombre que mostrar, y un nombre propio en el diseño prometía algo que la aplicación no hace |
+| **DV-34** | El pie del menú lateral mostraba un nombre propio ("Dante W. / Bibliotecario"); la aplicación rotula el **perfil** ("Bibliotecario / Personal de biblioteca") con un icono genérico | Baja | AN050 sección 3.3 <-> `layout.component.html` | ~~Resuelta a favor del código~~. **Superada por DV-38 el 2026-09-17.** Se resolvió sobre la premisa de que "sin sesión implementada (PA-02) no hay nombre que mostrar", y esa premisa caducó el día que se publicó con `AUTH_ENABLED=true`: hay sesión, hay correo y `GET /auth/user` lo devuelve |
+
+### 4.7 Cotejo desde un teléfono (2026-09-17)
+
+Las pasadas anteriores se hicieron **en el escritorio**, contra `localhost:4200` en una
+ventana ancha. Esta se hizo sobre la aplicación publicada y desde un teléfono, y encontró
+cuatro divergencias que ninguna pasada de escritorio podía encontrar: **tres de ellas solo
+existen cuando el navegador es el de un móvil**.
+
+| ID | Divergencia | Gravedad | Artefactos en conflicto | Resolución |
+|---|---|---|---|---|
+| **DV-35** | El campo de correo del `login` era un `<input>` de texto corriente, sin `type="email"` ni los atributos que apagan la autocorrección. En Android, Gboard "corrige" las palabras que no están en el diccionario y envía **otra dirección con formato válido**: el validador la da por buena, el botón se habilita y el backend responde **401**. En el escritorio no pasa porque no hay autocorrección | **Alta** | AN050 sección 3.1 <-> `login.component.html` | **Resuelta a favor del diseño.** El campo lleva `type`, `inputmode`, `autocapitalize`, `autocorrect` y `spellcheck`. Se recorta además el correo antes de enviarlo: se comprobó contra el backend publicado que **un espacio al final devuelve 401**, mientras que las mayúsculas no -Supabase normaliza el caso- |
+| **DV-36** | `.shell` medía `height: 100vh`. En un navegador móvil `100vh` es la altura con la barra de direcciones retraída, así que el shell desborda lo visible, el documento se desplaza entero y **la barra inferior de navegación no se queda fija**. El botón flotante sí lo hace, porque es `position: fixed`: los dos se contradicen en la misma pantalla | **Alta** | AN050 sección 3.5 <-> `layout.component.css` | **Resuelta a favor del diseño.** `100dvh` con `100vh` declarado antes como reserva, en el shell y en el `login`. AN050 sección 3.5 publica ahora la regla y sección 5 la añade a la lista de verificación |
+| **DV-37** | El campo de contraseña no tenía forma de revelar lo escrito. En un teclado de móvil, donde no se ve lo que se teclea y el error más probable es un carácter de más, es la diferencia entre corregir y volver a empezar | Media | AN050 sección 3.1 <-> `login.component.html` | **Resuelta a favor del diseño.** Conmutador de solo icono con `aria-pressed`, rótulo que dice la acción y `type="button"` para que no envíe el formulario |
+| **DV-38** | El pie del menú lateral rotulaba "Bibliotecario / Personal de biblioteca" **escrito a mano en la plantilla**, y por debajo de 1024 px ese pie desaparece con el menú: en un teléfono no se veía la cuenta **ni había ningún botón para cerrar sesión**. `LoginService.userInfoUrl` ya existía, y su comentario decía que "lo consume DashboardStore" cuando no lo consumía nadie | Media | AN050 secciones 3.3 y 3.5 <-> `layout.component.html`, `login.service.ts` | **Resuelta a favor del diseño. Supera a DV-34.** El pie muestra la cuenta de `GET /auth/user` sobre el perfil, y en móvil un avatar en la cabecera abre el correo completo y "Cerrar sesión". Con `AUTH_ENABLED=false` no se llama al endpoint: la cadena está en `permitAll` y devolvería `anonymousUser` |
+
+**Lo que enseña esta pasada.** Las tres divergencias altas y medias de arriba llevaban
+abiertas desde que existe la pantalla y **ninguna revisión de escritorio las habría visto**:
+dos dependen del teclado del móvil y una del navegador que retrae la barra de direcciones.
+Un cotejo hecho siempre en el mismo dispositivo solo prueba ese dispositivo. RNF-07 y TW-11
+se verificaban estrechando la ventana del escritorio, que reproduce el **ancho** pero no el
+teclado, ni la barra de direcciones, ni el `vh` que miente.
 
 > **El asistente de reserva se recorrió entero** el 2026-09-16 -cliente, libros y
 > confirmación- sin llegar a guardar: se salió con "Salir sin guardar" y la lista siguió con
@@ -323,9 +345,13 @@ Las correcciones del generador se aplicaron el **2026-09-14** sobre
 | DV-31 | Baja | AN050 7.1 - columnas y acciones | Aplicada |
 | DV-32 | Media | AN050 7.1 - asistente en estado inicial | Aplicada |
 | DV-33 | Media | AN050 2.3 - rol Error publicado | Aplicada |
-| DV-34 | Baja | AN050 3.3 - pie del menú | Aplicada |
+| DV-34 | Baja | AN050 3.3 - pie del menú | **Superada por DV-38** |
+| DV-35 | **Alta** | AN050 3.1 - correo a prueba de autocorrección | Aplicada |
+| DV-36 | **Alta** | AN050 3.5 - alto del shell en `dvh` | Aplicada |
+| DV-37 | Media | AN050 3.1 - conmutador de contraseña | Aplicada |
+| DV-38 | Media | AN050 3.3 + 3.5 - cuenta real y salida en móvil | Aplicada |
 
-**22 aplicadas - 1 parcial - 2 abiertas - 2 sin acción.**
+**26 aplicadas - 1 superada - 1 parcial - 2 abiertas - 2 sin acción.**
 
 ### 6.1 Lo que queda por hacer
 

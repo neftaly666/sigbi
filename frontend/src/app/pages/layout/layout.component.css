@@ -1,7 +1,14 @@
 .shell {
   display: grid;
   grid-template-columns: var(--sigbi-sidenav-width) 1fr;
+  /* DV-36. En el navegador de un teléfono `100vh` es el alto de la ventana CON la barra de
+     direcciones retraída, que es más de lo visible mientras esa barra se ve: el shell
+     desborda por abajo, se desplaza el documento entero y la barra inferior se va bajo el
+     pliegue en vez de quedarse quieta. El botón flotante no lo sufre porque es
+     `position: fixed` y se ancla al viewport real, así que los dos se contradicen.
+     `dvh` sigue el área visible. El `vh` de delante es la reserva para quien no lo tenga. */
   height: 100vh;
+  height: 100dvh;
   background: var(--mat-sys-surface);
 }
 
@@ -123,6 +130,11 @@
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
   margin: 0;
+  /* La cuenta puede ser larga y el menu mide 248 px: se recorta con puntos suspensivos y
+     el correo entero queda en el `title`. Necesita el `min-width: 0` del padre. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .usuario__perfil {

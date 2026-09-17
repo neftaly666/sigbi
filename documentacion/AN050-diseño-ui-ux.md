@@ -11,7 +11,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 |---|---|
 | Proyecto / Sistema | Sistema de Gestión Bibliotecaria Inteligente (SIGBI) |
 | Código del documento | AN050 |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Fecha | 2026-09-17 |
 | Autor | Dante Willy Quispe Madueño |
 | Estado | Vigente |
@@ -26,6 +26,7 @@ Trabajo final del curso Java AI Full Stack - MitoCode
 | 1.0 | 2026-09-14 | D. Quispe | Versión inicial. Formaliza el diseño ya construido en Figma: tokens con contraste calculado, app shell, componentes, estados y las nueve pantallas. |
 | 1.1 | 2026-09-14 | D. Quispe | Se aplican al generador las correcciones de AN090 (DV-01 a DV-21). Semáforo de estados con sus tres tonos reales, velo del modal al 45 %, `book-dialog` sin el campo inexistente y asistente que enseña su límite de solo lectura. |
 | 1.2 | 2026-09-17 | D. Quispe | Las pantallas ya están construidas: se corrige el estado de implementación, que seguía diciendo "por construir". Se actualiza la marca del menú con el nombre completo del sistema (DV-26 de AN090). |
+| 1.3 | 2026-09-17 | D. Quispe | Cotejo desde un teléfono (DV-35 a DV-38). `login` con bloque de marca a tres líneas centradas y conmutador de visibilidad en la contraseña; campo de correo saneado contra la autocorrección del móvil; el pie del menú muestra la cuenta que ha entrado en vez de un rótulo fijo; avatar de cuenta en la cabecera para poder salir en móvil; el alto del shell pasa a `dvh` para que la barra inferior no se desplace. |
 
 ## Aprobación
 
@@ -254,20 +255,45 @@ contenido de 1192 px.
 
 ### 3.1 Login
 
-Tarjeta centrada de 360 px sobre `Surface`, sin app shell: título de la aplicación a dos
-líneas, subtítulo "Ingrese sus credenciales", dos campos **rellenos** -correo y contraseña-
-y un botón "Entrar" alineado a la derecha. Mientras valida, una barra de progreso
-indeterminada corona la tarjeta.
+Tarjeta centrada sobre `Surface`, sin app shell. Ancho `min(360px, 100%)` dentro de un
+contenedor con 16 px de relleno: en el escritorio son los 360 px de siempre y en un
+teléfono de 360 px la tarjeta deja margen a los dos lados en vez de morder los bordes.
 
-Es la única pantalla que conserva la plantilla del curso. El acceso (RF-18) es de
-**prioridad C** y PA-02 lo dejó tras el interruptor `AUTH_ENABLED`: con la seguridad
-desactivada la aplicación entra directa a `/pages/dashboard`, así que rehacer el acceso
-habría sido trabajo sobre una pantalla que nadie ve.
+De arriba abajo:
+
+| Bloque | Especificación |
+|---|---|
+| **Marca**, centrada | Icono `menu_book` de 40 px en `Primary`; debajo las siglas **SIGBI** en Lora SemiBold 28/36; debajo **Sistema de Gestión Bibliotecaria Inteligente** en 12/16, `On Surface Variant` |
+| Subtítulo | "Ingrese sus credenciales", centrado, `On Surface Variant` |
+| Correo | Campo relleno. `type="email"` con `inputmode="email"`, `autocapitalize="none"`, `autocorrect="off"` y `spellcheck="false"` |
+| Contraseña | Campo relleno con **conmutador de visibilidad** al final (`visibility` / `visibility_off`) |
+| Acción | Botón "Entrar" alineado a la derecha |
+
+Mientras valida, una barra de progreso indeterminada corona la tarjeta.
+
+**Las tres líneas de la marca son la misma jerarquía que el menú lateral** (sección 3.3):
+icono, siglas, nombre completo. Allí van en fila y aquí apiladas y centradas, porque el
+`login` no tiene ancho que repartir y es la primera pantalla que alguien ve del sistema.
+
+**El conmutador de la contraseña** es un botón de solo icono con rótulo accesible que
+alterna entre "Mostrar contraseña" y "Ocultar contraseña", lleva `aria-pressed` y es
+`type="button"`: dentro de un `<form>`, un botón sin `type` actúa como envío y mandaría el
+formulario al pulsarlo. La contraseña arranca **siempre oculta**.
+
+**Por qué el campo de correo lleva cuatro atributos y no uno.** `type="email"` da el
+teclado con arroba y punto, pero es el conjunto el que apaga la autocorrección del móvil.
+En un campo de texto corriente, el teclado de Android "corrige" las palabras que no están
+en el diccionario y envía **otra dirección con formato válido**: el validador la acepta, el
+botón se habilita y el backend responde 401. En el escritorio no ocurre porque no hay
+autocorrección, así que el fallo solo se ve desde un teléfono (DV-35 de AN090).
 
 > **Esta sección se reescribió el 2026-09-16 contra la aplicación.** Antes describía un
 > acceso partido en dos columnas con panel de marca que nunca se implementó. Se resolvió a
 > favor de lo implementado (DV-27 en
 > [`AN090-conciliación-línea-diseño-funcional.md`](AN090-conciliación-línea-diseño-funcional.md)).
+>
+> **Ampliada el 2026-09-17**: bloque de marca a tres líneas centradas, conmutador de
+> visibilidad y saneamiento del campo de correo (DV-35 y DV-37 de AN090).
 
 ### 3.2 Cabecera (`topbar`)
 
@@ -288,7 +314,16 @@ filtros.
 
 De arriba abajo: **marca** (icono de libro en `Primary`, "SIGBI" en Lora 21 y "Sistema de
 Gestión Bibliotecaria Inteligente" en 11 px, en dos líneas), los **seis destinos**, un
-separador y la **fila de usuario** (avatar de 36 px, nombre, perfil y botón de salir).
+separador y la **fila de usuario** (avatar de 36 px, cuenta, perfil y botón de salir).
+
+**La fila de usuario dice quién ha entrado.** Primera línea: la **cuenta**, que es la parte
+del correo anterior a la arroba, recortada con puntos suspensivos y con el correo completo
+en el `title`. Segunda línea: el **perfil**, "Bibliotecario". El dato sale de
+`GET /auth/user`, que devuelve el `email` del token de Supabase.
+
+Con `AUTH_ENABLED` en `false` **no se llama a ese endpoint**: no hay sesión, la cadena de
+seguridad está en `permitAll` y la respuesta sería `anonymousUser`, que no es un dato sino
+un artefacto. En ese caso la primera línea dice "Sin sesión" y se mantiene el perfil.
 
 > **Actualizado el 2026-09-17** (DV-26 de AN090). La bajada decía "Gestión bibliotecaria".
 > El nombre completo del sistema solo aparecía en el README, así que quien abría la
@@ -330,7 +365,7 @@ Dos disposiciones; no hay tercera.
 | Ancho | Menú | Tabla | Cabecera |
 |---|---|---|---|
 | >= 1024 px | Lateral fijo de 248 px | Todas las columnas | Título + acciones |
-| < 1024 px | Barra inferior de navegación | La tabla se sustituye por tarjetas apiladas | Título compacto de 24/30 y acción principal como botón flotante |
+| < 1024 px | Barra inferior de navegación | La tabla se sustituye por tarjetas apiladas | Título compacto de 24/30, acción principal como botón flotante y **avatar de cuenta a la derecha** |
 
 El artboard `book-mobile` (390 x 844) fija la variante estrecha, que es la que cumple
 RNF-07 y TW-11. Dos decisiones importantes:
@@ -342,6 +377,23 @@ RNF-07 y TW-11. Dos decisiones importantes:
 2. **La barra inferior lleva cinco destinos, no seis.** Cabe la navegación principal -
    Panel, Libros, Clientes, Reservas, Asistente - y **Categorías** se relega al menú de la
    propia pantalla de Libros. Es el mantenimiento menos frecuente.
+
+3. **La cuenta y la salida viven en la cabecera, no en la barra.** Por debajo de 1024 px el
+   menú lateral desaparece, y con él la fila de usuario y el único botón de cerrar sesión:
+   en un teléfono no había forma de salir ni de saber con qué cuenta se había entrado. Se
+   resuelve con un **avatar de 36 px al final de la cabecera** que abre un menú con el
+   correo completo y "Cerrar sesión". No se añade un sexto destino a la barra: rompería la
+   regla anterior y dejaría los objetivos táctiles en 65 px. El avatar **solo existe por
+   debajo de 1024 px**; por encima, la fila del menú lateral ya hace ese trabajo (DV-38).
+
+**El alto del shell se mide en `dvh`, no en `vh`.** En el navegador de un teléfono, `100vh`
+es la altura de la ventana *con la barra de direcciones retraída*, que es mayor que lo
+visible mientras esa barra se ve. Un shell de `100vh` desborda por abajo, el documento
+entero pasa a desplazarse y **la barra inferior queda bajo el pliegue**, moviéndose con el
+dedo en vez de quedarse quieta. El botón flotante no comparte el fallo porque es
+`position: fixed` y se ancla al viewport real, así que los dos se contradicen en pantalla.
+`100dvh` sigue el área visible y deja fija la barra. Se declara `100vh` antes como reserva
+para navegadores sin `dvh` (DV-36).
 
 ---
 
@@ -403,6 +455,8 @@ Rótulos fijados, por si hubiera tentación de cambiarlos:
 | Objetivo táctil | >= 44 px de lado en la variante móvil | Medido en `book-mobile` |
 | Rótulo accesible | Todo botón de solo icono lo lleva | Revisión de plantilla |
 | Ancho mínimo | 390 px sin desbordamiento horizontal | `book-mobile` (RNF-07, TW-11) |
+| Control de dos estados | Lleva `aria-pressed` y su rótulo dice la acción, no el estado | Conmutador de contraseña |
+| Alto de ventana | El shell se mide en `dvh`; nada que deba quedar fijo va en el flujo de un alto en `vh` | Sección 3.5 |
 
 **Contrastes del tema claro**, medidos sobre los valores de sección 2.1-sección 2.2:
 

@@ -40,8 +40,12 @@
         <mat-icon>person</mat-icon>
       </div>
       <div class="usuario__datos">
-        <p class="usuario__nombre">Bibliotecario</p>
-        <p class="usuario__perfil">Personal de biblioteca</p>
+        <!-- Mientras carga no hay cuenta que mostrar: se oculta la linea en vez de poner un
+             nombre inventado, y el perfil de debajo sostiene la fila (DV-38) -->
+        @if ($cuenta()) {
+          <p class="usuario__nombre" [title]="$correo()">{{ $cuenta() }}</p>
+        }
+        <p class="usuario__perfil">Bibliotecario</p>
       </div>
       <button mat-icon-button aria-label="Cerrar sesión" matTooltip="Cerrar sesión" (click)="salir()">
         <mat-icon>logout</mat-icon>

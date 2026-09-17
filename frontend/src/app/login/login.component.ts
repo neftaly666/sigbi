@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -32,11 +32,20 @@ export class LoginComponent {
 
   protected $loggingIn = this.loginStore.$loggingIn;
 
+  //Arranca siempre oculta: revelar es un acto del usuario, no el estado por defecto
+  protected readonly $verContrasena = signal(false);
+
+  protected alternarContrasena() {
+    this.$verContrasena.update((visible) => !visible);
+  }
+
   login(){
     if(this.loginForm.isInvalid()) return;
 
     const { username, password } = this.loginForm.value();
 
-    this.loginStore.login(username, password);
+    //Un espacio de más en el correo lo rechaza el backend con un 401 que parece de
+    //credenciales. La contraseña no se toca: ahí un espacio puede ser parte de ella.
+    this.loginStore.login(username.trim(), password);
   }
 }

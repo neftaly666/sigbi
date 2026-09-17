@@ -7,6 +7,9 @@ import { environment } from "../../environments/environment.development";
 import { ERROR_DE_FORMULARIO } from "../shared/http/form-error.context";
 import { mensajeDeErrorHttp } from "../shared/utils/http-error-message";
 
+//Las dos rutas de autenticación del backend: /login y /login/bearer
+const esDelLogin = (url: string) => url.includes('/login');
+
 /**
  * Traduce el fallo a un aviso en español y decide quien más se entera.
  *
@@ -46,7 +49,12 @@ export const serverErrorInterceptor: HttpInterceptorFn = (req, next) => {
              * 403 no -la sesión es válida, el permiso no-, así que mandarlo al login sería
              * un bucle. Ambas páginas van fuera del shell.
              */
-            if (err.status === 401) {
+            //Un 401 del propio login no es una sesión caducada: son las credenciales. El aviso
+            //genérico mandaba a "vuelve a entrar" a quien ya estaba entrando, y el navigate
+            //recreaba la pantalla, de modo que el correo escrito se perdía sin explicar nada.
+            if (err.status === 401 && esDelLogin(req.url)) {
+                snackBar.open('Correo o contraseña incorrectos.', 'Cerrar', { duration: 6000 });
+            } else if (err.status === 401) {
                 snackBar.open('Tu sesión no es válida. Vuelve a entrar.', 'Cerrar', { duration: 6000 });
                 router.navigate(['/login']);
             } else if (err.status === 403) {
